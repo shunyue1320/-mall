@@ -17,7 +17,7 @@ spring:
 logging:
   level:
     root: info
-    com.macro.mall: debug
+    com.shunyue.mall: debug
 
 logstash:
   host: localhost

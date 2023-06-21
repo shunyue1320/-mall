@@ -10,9 +10,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>mall-admin</module>
         <module>mall-common</module>
         <module>mall-mbg</module>
+        <module>mall-admin</module>
     </modules>
 
     <parent>
