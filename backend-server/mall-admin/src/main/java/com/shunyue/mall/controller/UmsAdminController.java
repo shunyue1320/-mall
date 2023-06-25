@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 @Api(tags = "UmsAdminController")
 @Tag(name = "UmsAdminController", description = "后台用户管理")
@@ -32,5 +34,12 @@ public class UmsAdminController {
             return CommonResult.failed();
         }
         return CommonResult.success(umsAdmin);
+    }
+
+    @ApiOperation(value = "刷新token")
+    @RequestMapping(value = "/refreshToken", method = RequestMethod.GET)
+    @ResponseBody
+    public CommonResult refreshToken(HttpServletRequest request) {
+        return CommonResult.success("成功");
     }
 }
