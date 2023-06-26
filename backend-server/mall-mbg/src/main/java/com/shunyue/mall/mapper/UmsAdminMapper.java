@@ -9,4 +9,6 @@ import java.util.List;
 public interface UmsAdminMapper {
     int insert(UmsAdmin record);
     List<UmsAdmin> selectByExample(UmsAdminExample example);
+
+    UmsAdmin selectByPrimaryKey(Long id);
 }
