@@ -1,6 +1,9 @@
 package com.shunyue.mall.service;
 
 import com.shunyue.mall.model.UmsAdmin;
+import com.shunyue.mall.model.UmsResource;
+
+import java.util.List;
 
 /**
  * 后台用户缓存操作Service
@@ -20,4 +23,19 @@ public interface UmsAdminCacheService {
      * 获取缓存后台用户信息
      */
     UmsAdmin getAdmin(String username);
+
+    /**
+     * 获取缓存后台用户资源列表
+     */
+    List<UmsResource> getResourceList(Long adminId);
+
+    /**
+     * 设置缓存后台用户资源列表
+     */
+    void setResourceList(Long adminId, List<UmsResource> resourceList);
+
+    /**
+     * 删除缓存后台用户资源列表
+     */
+    void delResourceList(Long adminId);
 }

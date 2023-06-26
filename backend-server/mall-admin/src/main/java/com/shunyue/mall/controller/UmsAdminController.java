@@ -4,7 +4,6 @@ import com.shunyue.mall.common.api.CommonResult;
 import com.shunyue.mall.dto.UmsAdminLoginParam;
 import com.shunyue.mall.model.UmsAdmin;
 import com.shunyue.mall.dto.UmsAdminParam;
-import com.shunyue.mall.model.UmsAdminExample;
 import com.shunyue.mall.service.UmsAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

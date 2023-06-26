@@ -2,11 +2,14 @@ package com.shunyue.mall.service.impl;
 
 import com.shunyue.mall.common.service.RedisService;
 import com.shunyue.mall.model.UmsAdmin;
+import com.shunyue.mall.model.UmsResource;
 import com.shunyue.mall.service.UmsAdminCacheService;
 import com.shunyue.mall.service.UmsAdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 
 /**
@@ -48,5 +51,23 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
     public void setAdmin(UmsAdmin admin) {
         String key = REDIS_DATABASE + ":" + REDIS_KEY_ADMIN + ":" + admin.getUsername();
         redisService.set(key, admin, REDIS_EXPIRE);
+    }
+
+    @Override
+    public List<UmsResource> getResourceList(Long adminId) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
+        return (List<UmsResource>) redisService.get(key);
+    }
+
+    @Override
+    public void setResourceList(Long adminId, List<UmsResource> resourceList) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
+        redisService.set(key, resourceList, REDIS_EXPIRE);
+    }
+
+    @Override
+    public void delResourceList(Long adminId) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
+        redisService.del(key);
     }
 }

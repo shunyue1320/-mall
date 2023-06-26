@@ -3,6 +3,8 @@ package com.shunyue.mall.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.shunyue.mall.bo.AdminUserDetails;
+import com.shunyue.mall.common.exception.Asserts;
+import com.shunyue.mall.dao.UmsAdminRoleRelationDao;
 import com.shunyue.mall.dto.UmsAdminParam;
 import com.shunyue.mall.mapper.UmsAdminMapper;
 import com.shunyue.mall.model.UmsAdmin;
@@ -18,6 +20,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -32,8 +35,11 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
-//    @Autowired
-//    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UmsAdminRoleRelationDao adminRoleRelationDao;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public UmsAdmin register(UmsAdminParam umsAdminParam) {
@@ -67,16 +73,18 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         String token = null;
         //密码需要客户端加密后传递
         try {
+            // 通过用户名 username 获取用户信息
             UserDetails userDetails = loadUserByUsername(username);
-//            if(!passwordEncoder.matches(password,userDetails.getPassword())){
-//                Asserts.fail("密码不正确");
-//            }
-//            if(!userDetails.isEnabled()){
-//                Asserts.fail("帐号已被禁用");
-//            }
-            // 生成 token
+            if(!passwordEncoder.matches(password,userDetails.getPassword())){
+                Asserts.fail("密码不正确");
+            }
+            if(!userDetails.isEnabled()){
+                Asserts.fail("帐号已被禁用");
+            }
+            // token
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            // 生成 token
             token = jwtTokenUtil.generateToken(userDetails);
         } catch (AuthenticationException e) {
             //
@@ -87,13 +95,19 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         UmsAdmin admin = getAdminByUsername(username);
+        // 存在用户则通过 id 去 ums_role ums_role_resource_relation ums_resource 关联表里读取该用户可访问的的后台路由表
         if (admin != null) {
             List<UmsResource> resourceList = getResourceList(admin.getId());
             return new AdminUserDetails(admin,resourceList);
         }
-        throw new UsernameNotFoundException("用户名或密码错误1");
+        throw new UsernameNotFoundException("该用户不存在");
     }
 
+    /**
+     * 通过 用户id 获取该用户授权的后台路由列表
+     * @param adminId
+     * @return
+     */
     @Override
     public List<UmsResource> getResourceList(Long adminId) {
         //先从缓存中获取数据
@@ -105,7 +119,7 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         resourceList = adminRoleRelationDao.getResourceList(adminId);
         if(CollUtil.isNotEmpty(resourceList)){
             //将数据库中的数据存入缓存中
-            getCacheService().setResourceList(adminId,resourceList);
+            getCacheService().setResourceList(adminId, resourceList);
         }
         return resourceList;
     }
