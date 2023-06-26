@@ -13,6 +13,7 @@
         <module>mall-common</module>
         <module>mall-mbg</module>
         <module>mall-admin</module>
+        <module>mall-security</module>
     </modules>
 
     <parent>
@@ -101,11 +102,11 @@
                 <version>${mall-mbg.version}</version>
             </dependency>
             <!--mall安全模块-->
-<!--            <dependency>-->
-<!--                <groupId>com.shunyue.mall</groupId>-->
-<!--                <artifactId>mall-security</artifactId>-->
-<!--                <version>${mall-security.version}</version>-->
-<!--            </dependency>-->
+            <dependency>
+                <groupId>com.shunyue.mall</groupId>
+                <artifactId>mall-security</artifactId>
+                <version>${mall-security.version}</version>
+            </dependency>
             <!--MyBatis分页插件starter-->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
