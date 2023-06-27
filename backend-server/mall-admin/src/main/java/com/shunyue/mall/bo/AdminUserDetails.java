@@ -61,4 +61,15 @@ public class AdminUserDetails implements UserDetails {
     public boolean isEnabled() {
         return umsAdmin.getStatus().equals(1);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getClass().getSimpleName());
+        sb.append(" [");
+        sb.append("UmsAdmin=").append(this.umsAdmin.toString());
+        sb.append(", resourceList=").append("resourceList");
+        sb.append("]");
+        return sb.toString();
+    }
 }
