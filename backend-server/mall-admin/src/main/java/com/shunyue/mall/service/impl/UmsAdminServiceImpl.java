@@ -10,6 +10,7 @@ import com.shunyue.mall.mapper.UmsAdminMapper;
 import com.shunyue.mall.model.UmsAdmin;
 import com.shunyue.mall.model.UmsAdminExample;
 import com.shunyue.mall.model.UmsResource;
+import com.shunyue.mall.model.UmsRole;
 import com.shunyue.mall.security.util.JwtTokenUtil;
 import com.shunyue.mall.service.UmsAdminCacheService;
 import com.shunyue.mall.service.UmsAdminService;
@@ -105,6 +106,12 @@ public class UmsAdminServiceImpl implements UmsAdminService {
             return new AdminUserDetails(admin,resourceList);
         }
         throw new UsernameNotFoundException("该用户不存在");
+    }
+
+
+    @Override
+    public List<UmsRole> getRoleList(Long adminId) {
+        return adminRoleRelationDao.getRoleList(adminId);
     }
 
     /**

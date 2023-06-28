@@ -3,6 +3,7 @@ package com.shunyue.mall.service;
 import com.shunyue.mall.dto.UmsAdminParam;
 import com.shunyue.mall.model.UmsAdmin;
 import com.shunyue.mall.model.UmsResource;
+import com.shunyue.mall.model.UmsRole;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -43,6 +44,12 @@ public interface UmsAdminService {
      * 获取缓存服务
      */
     UmsAdminCacheService getCacheService();
+
+
+    /**
+     * 获取用户对应角色
+     */
+    List<UmsRole> getRoleList(Long adminId);
 
     /**
      * 获取指定用户的可访问资源

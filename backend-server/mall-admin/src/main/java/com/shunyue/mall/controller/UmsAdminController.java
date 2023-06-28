@@ -1,10 +1,13 @@
 package com.shunyue.mall.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import com.shunyue.mall.common.api.CommonResult;
 import com.shunyue.mall.dto.UmsAdminLoginParam;
 import com.shunyue.mall.model.UmsAdmin;
 import com.shunyue.mall.dto.UmsAdminParam;
+import com.shunyue.mall.model.UmsRole;
 import com.shunyue.mall.service.UmsAdminService;
+import com.shunyue.mall.service.UmsRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,8 +18,11 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @Api(tags = "UmsAdminController")
@@ -32,6 +38,9 @@ public class UmsAdminController {
 
     @Autowired
     private UmsAdminService adminService;
+
+    @Autowired
+    private UmsRoleService roleService;
 
     @ApiOperation(value = "用户注册")
     @PostMapping("/register")
@@ -57,6 +66,31 @@ public class UmsAdminController {
         tokenMap.put("tokenHead", tokenHead);
         return CommonResult.success(tokenMap);
     }
+
+    @ApiOperation("获取当前登录用户信息")
+    @GetMapping("/info")
+    @ResponseBody
+    public CommonResult getAdminInfo(Principal principal) {
+        // principal 是当前用户 token 内的身份信息
+        if (principal == null) {
+            return CommonResult.unauthorized(null);
+        }
+        String username = principal.getName();
+        // 通过 username 去数据库获取当前用户信息
+        UmsAdmin umsAdmin = adminService.getAdminByUsername(username);
+        Map<String, Object> data = new HashMap<>();
+        data.put("username", umsAdmin.getUsername());
+        // 获取该用户的前端页面路由表
+        data.put("menus", roleService.getMenuList(umsAdmin.getId()));
+        data.put("icon", umsAdmin.getIcon());
+        List<UmsRole> roleList = adminService.getRoleList(umsAdmin.getId());
+        if(CollUtil.isNotEmpty(roleList)){
+            List<String> roles = roleList.stream().map(UmsRole::getName).collect(Collectors.toList());
+            data.put("roles",roles);
+        }
+        return CommonResult.success(data);
+    }
+
 
     @ApiOperation(value = "刷新token")
     @GetMapping("/refreshToken")
