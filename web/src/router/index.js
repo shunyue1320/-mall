@@ -14,8 +14,8 @@ export const constantRouterMap = [
       meta: {title: '仪表盘', icon: 'dashboard'}
     }]
   },
-  {path: '/login', component: () => import('@/views/login'), hidden: true},
-  {path: '/404', component: () => import('@/views/404'), hidden: true},
+  {path: '/login', component: () => import('@/views/login') },
+  {path: '/404', component: () => import('@/views/404') },
 ]
 
 

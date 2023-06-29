@@ -46,10 +46,10 @@
         </el-form-item>
       </el-form>
     </el-card>
-    <img :src="login_center_bg" class="login-center-layout">
+    <img src="/images/login_center_bg.png" class="login-center-layout">
     <el-dialog
       title="公众号二维码"
-      :visible.sync="dialogVisible"
+      :visible="dialogVisible"
       :show-close="false"
       :center="true"
       width="30%">
@@ -68,7 +68,6 @@
 <script>
   import {isvalidUsername} from '@/utils/validate';
   import {setSupport,getSupport,setCookie,getCookie} from '@/utils/support';
-  import login_center_bg from '@/assets/images/login_center_bg.png'
 
   export default {
     name: 'login',
@@ -98,7 +97,6 @@
         },
         loading: false,
         pwdType: 'password',
-        login_center_bg,
         dialogVisible:false,
         supportDialogVisible:false
       }
