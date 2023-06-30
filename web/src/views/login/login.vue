@@ -6,8 +6,11 @@ const prefixCls = getPrefixCls('login')
 </script>
 
 <template>
-  <div :class="prefixCls">
-    <div>login</div>
+  <div
+    :class="prefixCls"
+    class="h-[100%] relative <xl:bg-v-dark <sm:px-10px <xl:px-10px <md:px-10px"
+  >
+    <div class="text-3xl font-bold underline">login</div>
   </div>
 </template>
 
