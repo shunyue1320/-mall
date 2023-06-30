@@ -4,6 +4,7 @@ import { createApp } from 'vue'
 import 'element-plus/dist/index.css'
 import App from './App.vue'
 import { setupRouter } from './router'
+import { setupStore } from './store'
 import { setupElementPlus } from '@/plugins/elementPlus'
 import { setupPermission } from './directives'
 
@@ -11,6 +12,8 @@ import { setupPermission } from './directives'
 
 const bootstrap = async () => {
   const app = createApp(App)
+  // 注入 pinia 状态管理
+  setupStore(app)
   // 注册路由
   setupRouter(app)
   // 全局引入一些 element-plus 组件
