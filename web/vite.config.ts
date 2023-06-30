@@ -73,6 +73,16 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       hmr: {
         overlay: false
       }
+    },
+    build: {
+      outDir: 'dist',
+      sourcemap: env.VITE_SOURCEMAP === 'true' ? 'inline' : false,
+      terserOptions: {
+        compress: {
+          drop_debugger: env.VITE_DROP_DEBUGGER === 'true',
+          drop_console: env.VITE_DROP_CONSOLE === 'true'
+        }
+      }
     }
   }
 }
