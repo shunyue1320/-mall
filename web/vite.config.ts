@@ -43,6 +43,14 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       }),
       DefineOptions()
     ],
+    css: {
+      preprocessorOptions: {
+        less: {
+          additionalData: '@import "./src/styles/variables.module.less";',
+          javascriptEnabled: true
+        }
+      }
+    },
     resolve: {
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.less', '.css', '.vue'],
       alias: [
