@@ -3,6 +3,7 @@ import { loadEnv } from 'vite'
 import EslintPlugin from 'vite-plugin-eslint'
 import vue from '@vitejs/plugin-vue'
 import type { ConfigEnv, UserConfig } from 'vite'
+import DefineOptions from 'unplugin-vue-define-options/vite'
 
 const root = process.cwd()
 
@@ -22,7 +23,8 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       EslintPlugin({
         cache: false,
         include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
-      })
+      }),
+      DefineOptions()
     ],
     resolve: {
       extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.less', '.css', '.vue'],

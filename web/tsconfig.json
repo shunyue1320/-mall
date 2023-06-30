@@ -26,6 +26,7 @@
     "types": [
       "vite/client",
       "element-plus/global",
+      "unplugin-vue-define-options/macros-global"
     ],
     "typeRoots": ["./node_modules/@types/", "./types"]
   },
