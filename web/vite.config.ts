@@ -4,6 +4,7 @@ import EslintPlugin from 'vite-plugin-eslint'
 import vue from '@vitejs/plugin-vue'
 import type { ConfigEnv, UserConfig } from 'vite'
 import DefineOptions from 'unplugin-vue-define-options/vite'
+import progress from 'vite-plugin-progress'
 
 const root = process.cwd()
 
@@ -20,6 +21,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     base: env.VITE_BASE_PATH,
     plugins: [
       vue(),
+      progress(),
       EslintPlugin({
         cache: false,
         include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
@@ -51,16 +53,3 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     }
   }
 }
-
-// export default defineConfig({
-//   plugins: [vue()],
-//   resolve: {
-//     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.less', '.css', '.vue'],
-//     alias: [
-//       {
-//         find: /\@\//,
-//         replacement: `${pathResolve('src')}/`
-//       }
-//     ]
-//   }
-// })
