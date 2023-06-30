@@ -1,1 +1,6 @@
-export default {}
+export default {
+  router: {
+    login: 'Login',
+    dashboard: 'Dashboard'
+  }
+}

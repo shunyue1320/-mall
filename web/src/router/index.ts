@@ -2,6 +2,9 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import type { App } from 'vue'
 import { Layout } from '@/utils/routerHelper'
+import { useI18n } from '@/hooks/web/useI18n'
+
+const { t } = useI18n()
 
 export const constantRouterMap = [
   {
@@ -10,7 +13,7 @@ export const constantRouterMap = [
     redirect: '/dashboard/analysis',
     name: 'Root',
     meta: {
-      name: '仪表盘',
+      title: t('router.dashboard'),
       hidden: true
     }
   },
@@ -37,7 +40,7 @@ export const constantRouterMap = [
     name: 'Login',
     meta: {
       hidden: true,
-      title: '登录',
+      title: t('router.login'),
       noTagsView: true
     }
   },
