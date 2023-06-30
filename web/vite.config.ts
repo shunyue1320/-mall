@@ -3,6 +3,7 @@ import { loadEnv } from 'vite'
 import EslintPlugin from 'vite-plugin-eslint'
 import vue from '@vitejs/plugin-vue'
 import type { ConfigEnv, UserConfig } from 'vite'
+import VueJsx from '@vitejs/plugin-vue-jsx'
 import DefineOptions from 'unplugin-vue-define-options/vite'
 import progress from 'vite-plugin-progress'
 import { createStyleImportPlugin, ElementPlusResolve } from 'vite-plugin-style-import'
@@ -22,6 +23,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     base: env.VITE_BASE_PATH,
     plugins: [
       vue(),
+      VueJsx(),
       progress(),
       createStyleImportPlugin({
         resolves: [ElementPlusResolve()],
