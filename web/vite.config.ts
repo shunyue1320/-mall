@@ -5,6 +5,7 @@ import vue from '@vitejs/plugin-vue'
 import type { ConfigEnv, UserConfig } from 'vite'
 import DefineOptions from 'unplugin-vue-define-options/vite'
 import progress from 'vite-plugin-progress'
+import { createStyleImportPlugin, ElementPlusResolve } from 'vite-plugin-style-import'
 
 const root = process.cwd()
 
@@ -22,6 +23,18 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     plugins: [
       vue(),
       progress(),
+      createStyleImportPlugin({
+        resolves: [ElementPlusResolve()],
+        libs: [
+          {
+            libraryName: 'element-plus',
+            esModule: true,
+            resolveStyle: (name) => {
+              return `element-plus/es/components/${name.substring(3)}/style/css`
+            }
+          }
+        ]
+      }),
       EslintPlugin({
         cache: false,
         include: ['src/**/*.vue', 'src/**/*.ts', 'src/**/*.tsx'] // 检查的文件
