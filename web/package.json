@@ -17,6 +17,7 @@
     "web-storage-cache": "^1.1.1"
   },
   "devDependencies": {
+    "@iconify/vue": "^4.1.1",
     "@types/node": "^20.3.2",
     "@typescript-eslint/eslint-plugin": "^5.60.1",
     "@typescript-eslint/parser": "^5.60.1",
@@ -38,6 +39,7 @@
     "vite": "^4.3.9",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-progress": "^0.0.7",
-    "vite-plugin-style-import": "^2.0.0"
+    "vite-plugin-style-import": "^2.0.0",
+    "vue-types": "^5.1.0"
   }
 }

@@ -52,7 +52,7 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
       }
     },
     resolve: {
-      extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.less', '.css', '.vue'],
+      extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.less', '.css'],
       alias: [
         {
           find: /\@\//,
