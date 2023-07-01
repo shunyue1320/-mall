@@ -6,6 +6,7 @@ import App from './App.vue'
 import { setupI18n } from '@/plugins/vueI18n'
 import { setupRouter } from './router'
 import { setupStore } from './store'
+import { setupGlobComponent } from '@/components'
 import { setupElementPlus } from '@/plugins/elementPlus'
 import { setupPermission } from './directives'
 
@@ -20,6 +21,8 @@ const bootstrap = async () => {
   setupStore(app)
   // 注册路由
   setupRouter(app)
+  // 注册全局组件
+  setupGlobComponent(app)
   // 全局引入一些 element-plus 组件
   setupElementPlus(app)
   // 注册权限指令
