@@ -141,7 +141,7 @@ const toRegister = () => {
     </template>
 
     <template #tool>
-      <div class="flex justify-between items-center w-[100%]">
+      <div class="flex justify-between items-center w-full">
         <ElCheckbox v-model="remember" :label="t('login.remember')" size="small" />
         <ElLink type="primary" :underline="false">{{ t('login.forgetPassword') }}</ElLink>
       </div>
@@ -149,19 +149,19 @@ const toRegister = () => {
 
     <template #login>
       <div class="w-full">
-        <ElButton :loading="loading" type="primary" class="w-[100%]" @click="signIn">
+        <ElButton :loading="loading" type="primary" class="w-full" @click="signIn">
           {{ t('login.login') }}
         </ElButton>
       </div>
       <div class="w-full mt-4">
-        <ElButton class="w-[100%]" @click="toRegister">
+        <ElButton class="w-full" @click="toRegister">
           {{ t('login.register') }}
         </ElButton>
       </div>
     </template>
 
     <template #otherIcon>
-      <div class="flex justify-between w-[100%]">
+      <div class="flex justify-between w-full">
         <Icon
           icon="ant-design:github-filled"
           :size="iconSize"

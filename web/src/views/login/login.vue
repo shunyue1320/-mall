@@ -68,33 +68,14 @@ const toRegister = () => {
         <Transition appear enter-active-class="animate__animated animate__bounceInRight">
           <div class="h-full flex items-center m-auto w-full sm:max-w-lg">
             <LoginForm v-if="isLogin" @to-register="toRegister" />
-            <!-- <RegisterForm
-            v-else
-            class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)"
-            @to-login="toLogin"
-          /> -->
+            <RegisterForm
+              v-else
+              class="p-20px h-auto m-auto <xl:(rounded-3xl light:bg-white)"
+              @to-login="toLogin"
+            />
           </div>
         </Transition>
       </div>
     </div>
   </div>
 </template>
-
-<style lang="less" scoped>
-@prefix-cls: ~'@{namespace}-login';
-
-// .@{prefix-cls} {
-//   &__left {
-//     &::before {
-//       position: absolute;
-//       top: 0;
-//       left: 0;
-//       z-index: -1;
-//       width: 100%;
-//       height: 100%;
-//       background-color: #8dcfff;
-//       content: '';
-//     }
-//   }
-// }
-</style>

@@ -1,5 +1,18 @@
 import request from '@/api/axios'
 
+export interface RegisterPayload {
+  username: string
+  password: string
+}
+
+export interface RegisterResult {
+  username: string
+}
+
+export const registerApi = (data: RegisterPayload): Promise<RegisterResult> => {
+  return request.post({ url: '/admin/register', data })
+}
+
 export interface LoginPayload {
   username: string
   password: string
