@@ -18,6 +18,29 @@ export const constantRouterMap = [
     }
   },
   {
+    path: '/dashboard',
+    component: Layout,
+    redirect: '/dashboard/analysis',
+    name: 'Dashboard',
+    meta: {
+      title: t('router.dashboard'),
+      icon: 'ant-design:dashboard-filled',
+      alwaysShow: true
+    },
+    children: [
+      {
+        path: 'analysis',
+        component: () => import('@/views/dashboard/analysis.vue'),
+        name: 'Analysis',
+        meta: {
+          title: t('router.analysis'),
+          noCache: true,
+          affix: true
+        }
+      }
+    ]
+  },
+  {
     path: '/redirect',
     component: Layout,
     name: 'Redirect',
@@ -55,6 +78,24 @@ export const constantRouterMap = [
     }
   }
 ] as RouteRecordRaw[]
+
+export const asyncRouterMap = [
+  {
+    path: '/pms',
+    component: Layout,
+    redirect: '/pms/product',
+    name: 'pms',
+    meta: { title: '商品', icon: 'odometer' },
+    children: [
+      {
+        path: 'product',
+        name: 'product',
+        component: () => import('@/views/pms/product/index.vue'),
+        meta: { title: '商品列表', icon: 'product-list' }
+      }
+    ]
+  }
+]
 
 export const router = createRouter({
   strict: true,
