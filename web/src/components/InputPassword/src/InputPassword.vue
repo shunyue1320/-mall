@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, unref, watch } from 'vue'
+import { ElInput } from 'element-plus'
 import { zxcvbn } from '@zxcvbn-ts/core'
 import type { ZxcvbnResult } from '@zxcvbn-ts/core'
 import { useDesign } from '@/hooks/web/useDesign'
