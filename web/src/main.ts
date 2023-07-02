@@ -6,7 +6,7 @@ import App from './App.vue'
 import { setupI18n } from '@/plugins/vueI18n'
 import { setupRouter } from './router'
 import { setupStore } from './store'
-import { setupGlobComponent } from '@/components'
+import { setupGlobComponent } from '@/components/index'
 import { setupElementPlus } from '@/plugins/elementPlus'
 import { setupPermission } from './directives'
 
