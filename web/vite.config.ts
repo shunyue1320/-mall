@@ -76,11 +76,12 @@ export default ({ command, mode }: ConfigEnv): UserConfig => {
     },
     build: {
       outDir: 'dist',
-      sourcemap: env.VITE_SOURCEMAP === 'true' ? 'inline' : false,
+      minify: 'terser',
+      sourcemap: mode === 'production' ? false : 'inline',
       terserOptions: {
         compress: {
-          drop_debugger: env.VITE_DROP_DEBUGGER === 'true',
-          drop_console: env.VITE_DROP_CONSOLE === 'true'
+          drop_debugger: true,
+          drop_console: true
         }
       }
     }
