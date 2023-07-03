@@ -112,4 +112,12 @@ public class UmsAdminController {
         List<UmsAdmin> adminList = adminService.list(keyword, pageSzie, pageNum);
         return CommonResult.success(CommonPage.restPage(adminList));
     }
+
+    @ApiOperation("获取指定用户的角色")
+    @GetMapping(value = "/role/{adminId}")
+    @ResponseBody
+    public CommonResult<List<UmsRole>> getRoleList(@PathVariable Long adminId) {
+        List<UmsRole> roleList = adminService.getRoleList(adminId);
+        return CommonResult.success(roleList);
+    }
 }

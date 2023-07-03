@@ -176,4 +176,5 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     public UmsAdminCacheService getCacheService() {
         return SpringUtil.getBean(UmsAdminCacheService.class);
     }
+
 }
