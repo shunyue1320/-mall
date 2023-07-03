@@ -4,6 +4,7 @@ import com.shunyue.mall.dto.UmsAdminParam;
 import com.shunyue.mall.model.UmsAdmin;
 import com.shunyue.mall.model.UmsResource;
 import com.shunyue.mall.model.UmsRole;
+import io.swagger.models.auth.In;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;
@@ -34,6 +35,11 @@ public interface UmsAdminService {
      * 根据用户id获取用户
      */
     UmsAdmin getItem(Long id);
+
+    /**
+     * 根据用户名或昵称分页查询用户
+     */
+    List<UmsAdmin> list(String keyword, Integer pageSize, Integer pageNum);
 
     /**
      * 根据用户名获取用户信息

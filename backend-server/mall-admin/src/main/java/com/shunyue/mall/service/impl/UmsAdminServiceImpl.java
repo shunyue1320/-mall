@@ -1,7 +1,9 @@
 package com.shunyue.mall.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
+import com.github.pagehelper.PageHelper;
 import com.shunyue.mall.bo.AdminUserDetails;
 import com.shunyue.mall.common.exception.Asserts;
 import com.shunyue.mall.dao.UmsAdminRoleRelationDao;
@@ -67,6 +69,19 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     @Override
     public  UmsAdmin getItem(Long id) {
         return adminMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<UmsAdmin> list(String keyword, Integer pageSzie, Integer pageNum) {
+        PageHelper.startPage(pageNum, pageSzie);
+        UmsAdminExample example = new UmsAdminExample();
+        UmsAdminExample.Criteria criteria = example.createCriteria();
+        // 关键字不为空时添加 username 关键词条件查询sql语句
+        if (!StrUtil.isEmpty(keyword)) {
+            criteria.andUsernameLike("%" + keyword + "%");
+            example.or(example.createCriteria().andNickNameLike("%" + keyword + "%"));
+        }
+        return adminMapper.selectByExample(example);
     }
 
     @Override

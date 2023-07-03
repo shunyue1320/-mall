@@ -1,6 +1,7 @@
 package com.shunyue.mall.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import com.shunyue.mall.common.api.CommonPage;
 import com.shunyue.mall.common.api.CommonResult;
 import com.shunyue.mall.dto.UmsAdminLoginParam;
 import com.shunyue.mall.model.UmsAdmin;
@@ -97,5 +98,18 @@ public class UmsAdminController {
     @ResponseBody
     public CommonResult refreshToken(HttpServletRequest request) {
         return CommonResult.success("成功");
+    }
+
+
+    @ApiOperation("根据用户名或姓名分页获取用户列表")
+    @GetMapping(value = "/list")
+    @ResponseBody
+    public CommonResult<CommonPage<UmsAdmin>> list(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSzie,
+            @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum
+    ) {
+        List<UmsAdmin> adminList = adminService.list(keyword, pageSzie, pageNum);
+        return CommonResult.success(CommonPage.restPage(adminList));
     }
 }
