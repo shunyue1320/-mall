@@ -1,4 +1,4 @@
-package com.shunyue.mall.config;
+package com.shunyue.mall.controller;
 
 
 import cn.hutool.core.collection.CollUtil;
@@ -14,10 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.text.SimpleDateFormat;
@@ -30,6 +27,7 @@ import java.util.Date;
 @Controller
 @Api(tags = "MinioController")
 @Tag(name = "MinioController", description = "MinIO对象存储管理")
+@RequestMapping("/minio")
 public class MinioController {
     private static final Logger LOGGER = LoggerFactory.getLogger(MinioController.class);
 
@@ -104,5 +102,24 @@ public class MinioController {
                 .Version("2012-10-17")
                 .Statement(CollUtil.toList(statement))
                 .build();
+    }
+
+
+    @ApiOperation("删除文件")
+    @PostMapping("/delete")
+    @ResponseBody
+    public CommonResult delete(@RequestParam("objectName") String objectName) {
+        try {
+            MinioClient minioClient = MinioClient.builder()
+                    .endpoint(ENDPOINT)
+                    .credentials(ACCESS_KEY,SECRET_KEY)
+                    .build();
+            minioClient.removeObject(RemoveObjectArgs.builder().bucket(BUCKET_NAME).object(objectName).build());
+            return CommonResult.success(null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.info("删除文件发生错误: {}！", e.getMessage());
+        }
+        return CommonResult.failed();
     }
 }
