@@ -6,6 +6,7 @@ import com.shunyue.mall.model.UmsResource;
 import com.shunyue.mall.model.UmsRole;
 import io.swagger.models.auth.In;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +32,12 @@ public interface UmsAdminService {
      */
     String login(String username,String password);
 
+
+    /**
+     * 刷新 token
+     */
+    String refreshToken(String oldToken);
+
     /**
      * 根据用户id获取用户
      */
@@ -45,6 +52,12 @@ public interface UmsAdminService {
      * 修改某个用户的信息
      */
     int update(Long adminId, UmsAdmin admin);
+
+
+    /**
+     * 删除某个用户的信息
+     */
+    int delete(Long id);
 
     /**
      * 根据用户名获取用户信息
@@ -66,4 +79,11 @@ public interface UmsAdminService {
      * 获取指定用户的可访问资源
      */
     List<UmsResource> getResourceList(Long adminId);
+
+    /**
+     *
+     */
+
+    @Transactional
+    public int updateRole(Long adminId, List<Long> roleIds);
 }

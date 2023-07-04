@@ -1,6 +1,7 @@
 package com.shunyue.mall.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.github.pagehelper.PageHelper;
@@ -9,10 +10,8 @@ import com.shunyue.mall.common.exception.Asserts;
 import com.shunyue.mall.dao.UmsAdminRoleRelationDao;
 import com.shunyue.mall.dto.UmsAdminParam;
 import com.shunyue.mall.mapper.UmsAdminMapper;
-import com.shunyue.mall.model.UmsAdmin;
-import com.shunyue.mall.model.UmsAdminExample;
-import com.shunyue.mall.model.UmsResource;
-import com.shunyue.mall.model.UmsRole;
+import com.shunyue.mall.mapper.UmsAdminRoleRelationMapper;
+import com.shunyue.mall.model.*;
 import com.shunyue.mall.security.util.JwtTokenUtil;
 import com.shunyue.mall.service.UmsAdminCacheService;
 import com.shunyue.mall.service.UmsAdminService;
@@ -25,7 +24,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -43,6 +44,9 @@ public class UmsAdminServiceImpl implements UmsAdminService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UmsAdminRoleRelationMapper adminRoleRelationMapper;
 
     @Override
     public UmsAdmin register(UmsAdminParam umsAdminParam) {
@@ -96,6 +100,11 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     }
 
     @Override
+    public String refreshToken(String oldToken) {
+        return jwtTokenUtil.refreshHeadToken(oldToken);
+    }
+
+    @Override
     public  UmsAdmin getItem(Long id) {
         return adminMapper.selectByPrimaryKey(id);
     }
@@ -130,6 +139,14 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         }
         int count = adminMapper.updateByPrimaryKeySelective(admin);
         getCacheService().delAdmin(adminId);
+        return count;
+    }
+
+    @Override
+    public int delete(Long id) {
+        getCacheService().delAdmin(id);
+        int count = adminMapper.deleteByPrimaryKey(id);
+        getCacheService().delResourceList(id);
         return count;
     }
 
@@ -198,4 +215,29 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         return SpringUtil.getBean(UmsAdminCacheService.class);
     }
 
+    @Override
+    public int updateRole(Long adminId, List<Long> roleIds) {
+        int count = roleIds == null ? 0 : roleIds.size();
+        //先删除原来的关系
+        UmsAdminRoleRelationExample adminRoleRelationExample = new UmsAdminRoleRelationExample();
+        // 创建查询，添加查询规则 adminId 等于当前id
+        adminRoleRelationExample.createCriteria().andAdminIdEqualTo(adminId);
+        adminRoleRelationMapper.deleteByExample(adminRoleRelationExample);
+
+        // 建立新关系
+        if (!CollectionUtils.isEmpty(roleIds)) {
+            List<UmsAdminRoleRelation> list = new ArrayList<>();
+            for (Long roleId : roleIds) {
+                UmsAdminRoleRelation roleRelation = new UmsAdminRoleRelation();
+                roleRelation.setAdminId(adminId);
+                roleRelation.setRoleId(roleId);
+                list.add(roleRelation);
+            }
+            // 插入关系到 ums_admin_role_relation 表中
+            adminRoleRelationDao.insertList(list);
+        }
+        // 删除 redis 缓存
+        getCacheService().delResourceList(adminId);
+        return count;
+    }
 }

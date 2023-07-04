@@ -26,6 +26,12 @@ public interface UmsRoleService {
     List<UmsRole> list();
 
     /**
+     * 分页获取角色列表
+     */
+    List<UmsRole> list(String keyword, Integer pageSize, Integer pageNum);
+
+
+    /**
      * 修改角色信息
      */
     int update(Long id, UmsRole role);

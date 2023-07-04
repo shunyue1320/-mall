@@ -92,17 +92,62 @@ public class UmsAdminController {
         return CommonResult.success(data);
     }
 
+    @ApiOperation(value = "登出功能")
+    @GetMapping("/logout")
+    @ResponseBody
+    public CommonResult logout() {
+        return CommonResult.success(null);
+    }
+
+    @ApiOperation("获取指定用户信息")
+    @GetMapping("/{id}")
+    @ResponseBody
+    public CommonResult<UmsAdmin> getItem(@PathVariable Long id) {
+        UmsAdmin admin = adminService.getItem(id);
+        return CommonResult.success(admin);
+    }
+
+    @ApiOperation("修改指定用户信息")
+    @PostMapping("/update/{id}")
+    @ResponseBody
+    public CommonResult update(@PathVariable Long id, @RequestBody UmsAdmin admin) {
+        int count = adminService.update(id, admin);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
+    }
+
+    @ApiOperation("删除指定用户信息")
+    @PostMapping("/delete/{id}")
+    @ResponseBody
+    public CommonResult delete(@PathVariable Long id, @RequestBody UmsAdmin admin) {
+        int count = adminService.delete(id);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
+    }
+
 
     @ApiOperation(value = "刷新token")
     @GetMapping("/refreshToken")
     @ResponseBody
     public CommonResult refreshToken(HttpServletRequest request) {
-        return CommonResult.success("成功");
+        String token = request.getHeader(tokenHeader);
+        String refreshToken = adminService.refreshToken(token);
+        if (refreshToken == null) {
+            return CommonResult.failed("token已经过期！");
+        }
+        Map<String, String> tokenMap = new HashMap<>();
+        tokenMap.put("token", refreshToken);
+        tokenMap.put("tokenHead", tokenHead);
+        return CommonResult.success(tokenMap);
     }
 
 
     @ApiOperation("根据用户名或姓名分页获取用户列表")
-    @GetMapping(value = "/list")
+    @GetMapping("/list")
     @ResponseBody
     public CommonResult<CommonPage<UmsAdmin>> list(
             @RequestParam(value = "keyword", required = false) String keyword,
@@ -114,7 +159,7 @@ public class UmsAdminController {
     }
 
     @ApiOperation("获取指定用户的角色")
-    @GetMapping(value = "/role/{adminId}")
+    @GetMapping("/role/{adminId}")
     @ResponseBody
     public CommonResult<List<UmsRole>> getRoleList(@PathVariable Long adminId) {
         List<UmsRole> roleList = adminService.getRoleList(adminId);
@@ -122,7 +167,7 @@ public class UmsAdminController {
     }
 
     @ApiOperation("修改帐号状态")
-    @PostMapping(value = "/updateStatus/{adminId}")
+    @PostMapping("/updateStatus/{adminId}")
     @ResponseBody
     public  CommonResult updateStatus(@PathVariable Long adminId, @RequestParam(value = "status") Integer status) {
         UmsAdmin umsAdmin = new UmsAdmin();

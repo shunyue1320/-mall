@@ -8,9 +8,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,10 +28,21 @@ public class UmsRoleController {
 
 
     @ApiOperation("获取所有角色")
-    @GetMapping(value ="/listAll")
+    @GetMapping("/listAll")
     @ResponseBody
     public CommonResult<List<UmsRole>> listAll() {
         List<UmsRole> roleList = roleService.list();
         return CommonResult.success(roleList);
+    }
+
+    @ApiOperation("更新角色信息")
+    @PostMapping("/update/{id}")
+    @ResponseBody
+    public CommonResult update(@PathVariable Long id, @RequestBody UmsRole role) {
+        int count = roleService.update(id, role);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
     }
 }

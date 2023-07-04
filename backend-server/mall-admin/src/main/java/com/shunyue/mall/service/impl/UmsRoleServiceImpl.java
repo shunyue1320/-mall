@@ -1,6 +1,8 @@
 package com.shunyue.mall.service.impl;
 
 
+import cn.hutool.core.util.StrUtil;
+import com.github.pagehelper.PageHelper;
 import com.shunyue.mall.dao.UmsRoleDao;
 import com.shunyue.mall.mapper.UmsRoleMapper;
 import com.shunyue.mall.model.UmsMenu;
@@ -43,6 +45,18 @@ public class UmsRoleServiceImpl implements UmsRoleService {
     @Override
     public List<UmsRole> list() {
         return roleMapper.selectByExample(new UmsRoleExample());
+    }
+
+    @Override
+    public List<UmsRole> list(String keyword, Integer pageSize, Integer pageNum) {
+        PageHelper.startPage(pageNum, pageSize);
+        UmsRoleExample example = new UmsRoleExample();
+        // 添加关键字搜索 sql 语句
+        if (!StrUtil.isEmpty(keyword)) {
+            example.createCriteria().andNameLike("%" + keyword + "%");
+        }
+        // 执行sql查询
+        return roleMapper.selectByExample(example);
     }
 
     @Override
