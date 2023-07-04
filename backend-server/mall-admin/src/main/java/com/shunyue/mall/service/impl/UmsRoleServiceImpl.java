@@ -5,6 +5,7 @@ import com.shunyue.mall.dao.UmsRoleDao;
 import com.shunyue.mall.mapper.UmsRoleMapper;
 import com.shunyue.mall.model.UmsMenu;
 import com.shunyue.mall.model.UmsRole;
+import com.shunyue.mall.model.UmsRoleExample;
 import com.shunyue.mall.service.UmsRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,5 +38,10 @@ public class UmsRoleServiceImpl implements UmsRoleService {
     public List<UmsMenu> getMenuList(Long adminId) {
         // 去数据库里面读取
         return roleDao.getMenuList(adminId);
+    }
+
+    @Override
+    public List<UmsRole> list() {
+        return roleMapper.selectByExample(new UmsRoleExample());
     }
 }

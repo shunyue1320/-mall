@@ -19,4 +19,9 @@ public interface UmsRoleService {
      * 根据管理员ID获取对应菜单
      */
     List<UmsMenu> getMenuList(Long adminId);
+
+    /**
+     * 获取所有角色列表
+     */
+    List<UmsRole> list();
 }
