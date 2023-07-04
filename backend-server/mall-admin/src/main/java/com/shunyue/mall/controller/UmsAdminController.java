@@ -120,4 +120,17 @@ public class UmsAdminController {
         List<UmsRole> roleList = adminService.getRoleList(adminId);
         return CommonResult.success(roleList);
     }
+
+    @ApiOperation("修改帐号状态")
+    @PostMapping(value = "/updateStatus/{adminId}")
+    @ResponseBody
+    public  CommonResult updateStatus(@PathVariable Long adminId, @RequestParam(value = "status") Integer status) {
+        UmsAdmin umsAdmin = new UmsAdmin();
+        umsAdmin.setStatus(status);
+        int count = adminService.update(adminId, umsAdmin);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
+    }
 }

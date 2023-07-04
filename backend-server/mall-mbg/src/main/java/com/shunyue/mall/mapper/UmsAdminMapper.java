@@ -11,4 +11,6 @@ public interface UmsAdminMapper {
     List<UmsAdmin> selectByExample(UmsAdminExample example);
 
     UmsAdmin selectByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(UmsAdmin record);
 }

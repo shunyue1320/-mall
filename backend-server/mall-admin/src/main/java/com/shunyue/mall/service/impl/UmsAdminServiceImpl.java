@@ -66,23 +66,6 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         return umsAdmin;
     }
 
-    @Override
-    public  UmsAdmin getItem(Long id) {
-        return adminMapper.selectByPrimaryKey(id);
-    }
-
-    @Override
-    public List<UmsAdmin> list(String keyword, Integer pageSzie, Integer pageNum) {
-        PageHelper.startPage(pageNum, pageSzie);
-        UmsAdminExample example = new UmsAdminExample();
-        UmsAdminExample.Criteria criteria = example.createCriteria();
-        // 关键字不为空时添加 username 关键词条件查询sql语句
-        if (!StrUtil.isEmpty(keyword)) {
-            criteria.andUsernameLike("%" + keyword + "%");
-            example.or(example.createCriteria().andNickNameLike("%" + keyword + "%"));
-        }
-        return adminMapper.selectByExample(example);
-    }
 
     @Override
     public String login(String username, String password) {
@@ -110,6 +93,44 @@ public class UmsAdminServiceImpl implements UmsAdminService {
             // LOGGER.warn("登录异常:{}", e.getMessage());
         }
         return token;
+    }
+
+    @Override
+    public  UmsAdmin getItem(Long id) {
+        return adminMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<UmsAdmin> list(String keyword, Integer pageSzie, Integer pageNum) {
+        PageHelper.startPage(pageNum, pageSzie);
+        UmsAdminExample example = new UmsAdminExample();
+        UmsAdminExample.Criteria criteria = example.createCriteria();
+        // 关键字不为空时添加 username 关键词条件查询sql语句
+        if (!StrUtil.isEmpty(keyword)) {
+            criteria.andUsernameLike("%" + keyword + "%");
+            example.or(example.createCriteria().andNickNameLike("%" + keyword + "%"));
+        }
+        return adminMapper.selectByExample(example);
+    }
+
+    @Override
+    public int update(Long adminId, UmsAdmin admin) {
+        admin.setId(adminId);
+        UmsAdmin rawAdmin = adminMapper.selectByPrimaryKey(adminId);
+        if (rawAdmin.getPassword().equals(admin.getPassword())) {
+            //与原加密密码相同的不需要修改
+            admin.setPassword(null);
+        } else {
+            //与原加密密码不同的需要加密修改
+            if (StrUtil.isEmpty(admin.getPassword())) {
+                admin.setPassword(null);
+            } else {
+                admin.setPassword(passwordEncoder.encode(admin.getPassword()));
+            }
+        }
+        int count = adminMapper.updateByPrimaryKeySelective(admin);
+        getCacheService().delAdmin(adminId);
+        return count;
     }
 
     @Override

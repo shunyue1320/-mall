@@ -42,6 +42,11 @@ public interface UmsAdminService {
     List<UmsAdmin> list(String keyword, Integer pageSize, Integer pageNum);
 
     /**
+     * 修改某个用户的信息
+     */
+    int update(Long adminId, UmsAdmin admin);
+
+    /**
      * 根据用户名获取用户信息
      */
     UserDetails loadUserByUsername(String username);
