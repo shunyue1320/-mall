@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shunyue.mall.mapper.UmsAdminRoleRelationMapper">
+    <resultMap id="BaseResultMap" type="com.shunyue.mall.model.UmsAdminRoleRelation">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="admin_id" jdbcType="BIGINT" property="adminId" />
+        <result column="role_id" jdbcType="BIGINT" property="roleId" />
+    </resultMap>
     <!-- 对输入参数进行自动转义和过滤，从而避免一些安全问题，如 SQL 注入攻击等 -->
     <sql id="Example_Where_Clause">
         <where>
@@ -31,10 +36,27 @@
             </foreach>
         </where>
     </sql>
+    <sql id="Base_Column_List">
+        id, admin_id, role_id
+    </sql>
     <delete id="deleteByExample" parameterType="com.shunyue.mall.model.UmsAdminRoleRelationExample">
         delete from ums_admin_role_relation
         <if test="_parameter != null">
             <include refid="Example_Where_Clause" />
         </if>
     </delete>
+    <select id="selectByExample" parameterType="com.shunyue.mall.model.UmsAdminRoleRelationExample" resultMap="BaseResultMap">
+        select
+        <if test="distinct">
+            distinct
+        </if>
+        <include refid="Base_Column_List" />
+        from ums_admin_role_relation
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause" />
+        </if>
+        <if test="orderByClause != null">
+            order by ${orderByClause}
+        </if>
+    </select>
 </mapper>

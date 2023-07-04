@@ -29,6 +29,28 @@ public class UmsRoleController {
 
 
     @ApiOperation("获取所有角色")
+    @PostMapping("/create")
+    @ResponseBody
+    public CommonResult create(@RequestBody UmsRole role) {
+        int count = roleService.create(role);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
+    }
+    @ApiOperation("获取所有角色")
+    @PostMapping("/delete")
+    @ResponseBody
+    public CommonResult delete(@RequestParam("ids") List<Long> ids) {
+        int count = roleService.delete(ids);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
+    }
+
+
+    @ApiOperation("获取所有角色")
     @GetMapping("/listAll")
     @ResponseBody
     public CommonResult<List<UmsRole>> listAll() {
@@ -53,6 +75,19 @@ public class UmsRoleController {
     @ResponseBody
     public CommonResult update(@PathVariable Long id, @RequestBody UmsRole role) {
         int count = roleService.update(id, role);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
+    }
+
+    @ApiOperation("修改角色状态")
+    @PostMapping("/updateStatus/{id}")
+    @ResponseBody
+    public CommonResult updateStatus(@PathVariable Long id, @RequestParam(value = "status") Integer status) {
+        UmsRole umsRole = new UmsRole();
+        umsRole.setStatus(status);
+        int count = roleService.update(id, umsRole);
         if (count > 0) {
             return CommonResult.success(count);
         }

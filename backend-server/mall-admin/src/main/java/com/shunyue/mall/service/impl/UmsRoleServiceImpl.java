@@ -8,9 +8,11 @@ import com.shunyue.mall.mapper.UmsRoleMapper;
 import com.shunyue.mall.model.UmsMenu;
 import com.shunyue.mall.model.UmsRole;
 import com.shunyue.mall.model.UmsRoleExample;
+import com.shunyue.mall.service.UmsAdminCacheService;
 import com.shunyue.mall.service.UmsRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -27,6 +29,9 @@ public class UmsRoleServiceImpl implements UmsRoleService {
     @Autowired
     private UmsRoleDao roleDao;
 
+    @Autowired
+    UmsAdminCacheService adminCacheService;
+
     @Override
     public int create(UmsRole role) {
         role.setCreateTime(new Date());
@@ -34,6 +39,16 @@ public class UmsRoleServiceImpl implements UmsRoleService {
         role.setSort(0);
         // 将角色插入 ums_role 数据库里面
         return roleMapper.insert(role);
+    }
+
+    @Override
+    public int delete(List<Long> ids) {
+        UmsRoleExample example = new UmsRoleExample();
+        example.createCriteria().andIdIn(ids);
+        int count = roleMapper.deleteByExample(example);
+        // 删除了这些角色，需要清除 角色和用户的关系表相关数据 并清除对应的 redis 缓存
+        adminCacheService.delResourceListByRoleIds(ids);
+        return count;
     }
 
     @Override

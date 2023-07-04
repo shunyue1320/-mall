@@ -3,6 +3,7 @@ package com.shunyue.mall.service;
 
 import com.shunyue.mall.model.UmsMenu;
 import com.shunyue.mall.model.UmsRole;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -35,4 +36,9 @@ public interface UmsRoleService {
      * 修改角色信息
      */
     int update(Long id, UmsRole role);
+
+    /**
+     * 删除角色信息
+     */
+    int delete(List<Long> ids);
 }
