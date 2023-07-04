@@ -1,5 +1,6 @@
 package com.shunyue.mall.controller;
 
+import com.shunyue.mall.common.api.CommonPage;
 import com.shunyue.mall.common.api.CommonResult;
 import com.shunyue.mall.model.UmsRole;
 import com.shunyue.mall.service.UmsRoleService;
@@ -33,6 +34,18 @@ public class UmsRoleController {
     public CommonResult<List<UmsRole>> listAll() {
         List<UmsRole> roleList = roleService.list();
         return CommonResult.success(roleList);
+    }
+
+    @ApiOperation("获取角色列表")
+    @GetMapping("/list")
+    @ResponseBody
+    public CommonResult<CommonPage<UmsRole>> list(
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+            @RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum
+    ) {
+        List<UmsRole> roleList = roleService.list(keyword, pageSize, pageNum);
+        return CommonResult.success(CommonPage.restPage(roleList));
     }
 
     @ApiOperation("更新角色信息")

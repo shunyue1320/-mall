@@ -13,4 +13,8 @@ public interface UmsResourceMapper {
     List<UmsResource> selectByExample(UmsResourceExample example);
 
     UmsResource selectByPrimaryKey(Long id);
+
+    int deleteByPrimaryKey(Long id);
+
+    int updateByPrimaryKeySelective(UmsResource record);
 }

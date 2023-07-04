@@ -30,11 +30,10 @@ public class UmsResourceServiceImpl implements UmsResourceService {
 
     @Override
     public int update(Long id, UmsResource umsResource) {
-//        umsResource.setId(id);
-//        int count = resourceMapper.updateByPrimaryKeySelective(umsResource);
-//        adminCacheService.delResourceListByResource(id);
-//        return count;
-        return 1;
+        umsResource.setId(id);
+        int count = resourceMapper.updateByPrimaryKeySelective(umsResource);
+        adminCacheService.delResourceListByResource(id);
+        return count;
     }
 
     @Override
@@ -44,10 +43,10 @@ public class UmsResourceServiceImpl implements UmsResourceService {
 
     @Override
     public int delete(Long id) {
-//        int count = resourceMapper.deleteByPrimaryKey(id);
-//        adminCacheService.delResourceListByResource(id);
-//        return count;
-        return 1;
+        int count = resourceMapper.deleteByPrimaryKey(id);
+        // 删除 redis 缓存
+        adminCacheService.delResourceListByResource(id);
+        return count;
     }
 
     @Override
