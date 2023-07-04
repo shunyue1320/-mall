@@ -21,7 +21,7 @@ public class UmsAdminParam {
     private String password;
     @ApiModelProperty(value = "用户头像")
     private String icon;
-    @Email
+    @Email(message = "请输入正确的电子邮件地址！")
     @ApiModelProperty(value = "邮箱")
     private String email;
     @ApiModelProperty(value = "用户昵称")

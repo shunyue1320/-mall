@@ -121,7 +121,7 @@ public class UmsAdminController {
     @ApiOperation("删除指定用户信息")
     @PostMapping("/delete/{id}")
     @ResponseBody
-    public CommonResult delete(@PathVariable Long id, @RequestBody UmsAdmin admin) {
+    public CommonResult delete(@PathVariable Long id) {
         int count = adminService.delete(id);
         if (count > 0) {
             return CommonResult.success(count);
