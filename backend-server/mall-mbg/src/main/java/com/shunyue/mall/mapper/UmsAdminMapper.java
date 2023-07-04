@@ -12,5 +12,7 @@ public interface UmsAdminMapper {
 
     UmsAdmin selectByPrimaryKey(Long id);
 
+    int deleteByPrimaryKey(Long id);
+
     int updateByPrimaryKeySelective(UmsAdmin record);
 }

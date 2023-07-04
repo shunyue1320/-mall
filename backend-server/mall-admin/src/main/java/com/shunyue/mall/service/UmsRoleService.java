@@ -24,4 +24,9 @@ public interface UmsRoleService {
      * 获取所有角色列表
      */
     List<UmsRole> list();
+
+    /**
+     * 修改角色信息
+     */
+    int update(Long id, UmsRole role);
 }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.shunyue.mall.mapper.UmsAdminRoleRelationMapper">
+    <!-- 对输入参数进行自动转义和过滤，从而避免一些安全问题，如 SQL 注入攻击等 -->
+    <sql id="Example_Where_Clause">
+        <where>
+            <foreach collection="oredCriteria" item="criteria" separator="or"> <!-- 使用 foreach 根据 oredCriteria 集合中的多个查询条件拼接 or 连接符 -->
+                <if test="criteria.valid"> <!-- 如果当前查询条件有效，则执行以下代码块 -->
+                    <trim prefix="(" prefixOverrides="and" suffix=")"> <!-- 使用 trim 标签消除尾部空格和 and 连接符，同时添加头部左括号 -->
+                        <foreach collection="criteria.criteria" item="criterion"> <!-- 使用 foreach 循环查询条件列表中的多个条件 -->
+                            <choose> <!-- 当前项是 choose / when 结构，用于实现复杂条件判断 -->
+                                <when test="criterion.noValue"> <!-- 当前项如果满足 noValue 条件，则执行以下代码块 -->
+                                    and ${criterion.condition}  <!-- 添加 and 连接符和查询条件语句 -->
+                                </when>
+                                <when test="criterion.singleValue"> <!-- 当前项如果满足 singleValue 条件，则执行以下代码块 -->
+                                    and ${criterion.condition} #{criterion.value}  <!-- 添加 and 连接符、查询条件语句和参数占位符 -->
+                                </when>
+                                <when test="criterion.betweenValue">
+                                    and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                                </when>
+                                <when test="criterion.listValue">
+                                    and ${criterion.condition}
+                                    <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=","> <!-- 使用 foreach 循环集合中的多个值 -->
+                                        #{listItem} <!-- 添加参数占位符 -->
+                                    </foreach>
+                                </when>
+                            </choose>
+                        </foreach>
+                    </trim>
+                </if>
+            </foreach>
+        </where>
+    </sql>
+    <delete id="deleteByExample" parameterType="com.shunyue.mall.model.UmsAdminRoleRelationExample">
+        delete from ums_admin_role_relation
+        <if test="_parameter != null">
+            <include refid="Example_Where_Clause" />
+        </if>
+    </delete>
+</mapper>

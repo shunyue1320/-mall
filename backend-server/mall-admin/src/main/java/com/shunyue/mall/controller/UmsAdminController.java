@@ -133,4 +133,20 @@ public class UmsAdminController {
         }
         return CommonResult.failed();
     }
+
+
+
+    @ApiOperation("修改帐号状态")
+    @PostMapping("/role/update")
+    @ResponseBody
+    public CommonResult updateRole(
+            @RequestParam("adminId") Long adminId,
+            @RequestParam("roleIds") List<Long> roleIds
+    ) {
+        int count = adminService.updateRole(adminId, roleIds);
+        if (count >= 0) {
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
+    }
 }
