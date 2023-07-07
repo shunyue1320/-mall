@@ -78,6 +78,137 @@
         keywords, note, album_pics, detail_title, promotion_start_time, promotion_end_time,
         promotion_per_limit, promotion_type, brand_name, product_category_name
     </sql>
+    <insert id="insertSelective" parameterType="com.shunyue.mall.model.PmsProduct">
+        <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Long">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into pms_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">
+                brand_id,
+            </if>
+            <if test="productCategoryId != null">
+                product_category_id,
+            </if>
+            <if test="feightTemplateId != null">
+                feight_template_id,
+            </if>
+            <if test="productAttributeCategoryId != null">
+                product_attribute_category_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="pic != null">
+                pic,
+            </if>
+            <if test="productSn != null">
+                product_sn,
+            </if>
+            <if test="deleteStatus != null">
+                delete_status,
+            </if>
+            <if test="publishStatus != null">
+                publish_status,
+            </if>
+            <if test="newStatus != null">
+                new_status,
+            </if>
+            <if test="recommandStatus != null">
+                recommand_status,
+            </if>
+            <if test="verifyStatus != null">
+                verify_status,
+            </if>
+            <if test="sort != null">
+                sort,
+            </if>
+            <if test="sale != null">
+                sale,
+            </if>
+            <if test="price != null">
+                price,
+            </if>
+            <if test="promotionPrice != null">
+                promotion_price,
+            </if>
+            <if test="giftGrowth != null">
+                gift_growth,
+            </if>
+            <if test="giftPoint != null">
+                gift_point,
+            </if>
+            <if test="usePointLimit != null">
+                use_point_limit,
+            </if>
+            <if test="subTitle != null">
+                sub_title,
+            </if>
+            <if test="originalPrice != null">
+                original_price,
+            </if>
+            <if test="stock != null">
+                stock,
+            </if>
+            <if test="lowStock != null">
+                low_stock,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+            <if test="weight != null">
+                weight,
+            </if>
+            <if test="previewStatus != null">
+                preview_status,
+            </if>
+            <if test="serviceIds != null">
+                service_ids,
+            </if>
+            <if test="keywords != null">
+                keywords,
+            </if>
+            <if test="note != null">
+                note,
+            </if>
+            <if test="albumPics != null">
+                album_pics,
+            </if>
+            <if test="detailTitle != null">
+                detail_title,
+            </if>
+            <if test="promotionStartTime != null">
+                promotion_start_time,
+            </if>
+            <if test="promotionEndTime != null">
+                promotion_end_time,
+            </if>
+            <if test="promotionPerLimit != null">
+                promotion_per_limit,
+            </if>
+            <if test="promotionType != null">
+                promotion_type,
+            </if>
+            <if test="brandName != null">
+                brand_name,
+            </if>
+            <if test="productCategoryName != null">
+                product_category_name,
+            </if>
+            <if test="description != null">
+                description,
+            </if>
+            <if test="detailDesc != null">
+                detail_desc,
+            </if>
+            <if test="detailHtml != null">
+                detail_html,
+            </if>
+            <if test="detailMobileHtml != null">
+                detail_mobile_html,
+            </if>
+        </trim>
+    </insert>
     <select id="selectByExample" parameterType="com.shunyue.mall.model.PmsProductExample" resultMap="BaseResultMap">
         select
         <if test="distinct">

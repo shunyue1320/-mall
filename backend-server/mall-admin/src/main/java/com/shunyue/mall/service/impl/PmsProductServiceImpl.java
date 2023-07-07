@@ -2,16 +2,23 @@ package com.shunyue.mall.service.impl;
 
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
+import com.shunyue.mall.dao.*;
+import com.shunyue.mall.dto.PmsProductParam;
 import com.shunyue.mall.dto.PmsProductQueryParam;
 import com.shunyue.mall.mapper.PmsProductMapper;
 import com.shunyue.mall.model.PmsProduct;
 import com.shunyue.mall.model.PmsProductExample;
+import com.shunyue.mall.model.PmsSkuStock;
 import com.shunyue.mall.service.PmsProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -20,6 +27,70 @@ public class PmsProductServiceImpl implements PmsProductService {
 
     @Autowired
     private PmsProductMapper productMapper;
+
+    @Autowired
+    protected PmsMemberPriceDao memberPriceDao;
+
+    @Autowired
+    private PmsMemberPriceMapper memberPriceMapper;
+    @Autowired
+    private PmsMemberPriceDao.PmsProductLadderDao productLadderDao;
+    @Autowired
+    private PmsProductLadderMapper productLadderMapper;
+    @Autowired
+    private PmsProductFullReductionDao productFullReductionDao;
+    @Autowired
+    private PmsProductFullReductionMapper productFullReductionMapper;
+    @Autowired
+    private PmsSkuStockDao skuStockDao;
+    @Autowired
+    private PmsSkuStockMapper skuStockMapper;
+    @Autowired
+    private PmsProductAttributeValueDao productAttributeValueDao;
+    @Autowired
+    private PmsProductAttributeValueMapper productAttributeValueMapper;
+    @Autowired
+    private CmsSubjectProductRelationDao subjectProductRelationDao;
+    @Autowired
+    private CmsSubjectProductRelationMapper subjectProductRelationMapper;
+    @Autowired
+    private CmsPrefrenceAreaProductRelationDao prefrenceAreaProductRelationDao;
+    @Autowired
+    private CmsPrefrenceAreaProductRelationMapper prefrenceAreaProductRelationMapper;
+    @Autowired
+    private PmsProductDao productDao;
+    @Autowired
+    private PmsProductVertifyRecordDao productVertifyRecordDao;
+
+    @Override
+    public int create(PmsProductParam productParam) {
+        int count;
+        //创建商品
+        PmsProduct product = productParam;
+        product.setId(null);
+        // 将数据插入到 商品信息 表中
+        productMapper.insertSelective(product);
+        //根据促销类型设置价格：会员价格、阶梯价格、满减价格
+        Long productId = product.getId();
+        //会员价格
+        relateAndInsertList(memberPriceDao, productParam.getMemberPriceList(), productId);
+        //阶梯价格
+        relateAndInsertList(productLadderDao, productParam.getProductLadderList(), productId);
+        //满减价格
+        relateAndInsertList(productFullReductionDao, productParam.getProductFullReductionList(), productId);
+        //处理sku的编码
+        handleSkuStockCode(productParam.getSkuStockList(),productId);
+        //添加sku库存信息
+        relateAndInsertList(skuStockDao, productParam.getSkuStockList(), productId);
+        //添加商品参数,添加自定义商品规格
+        relateAndInsertList(productAttributeValueDao, productParam.getProductAttributeValueList(), productId);
+        //关联专题
+        relateAndInsertList(subjectProductRelationDao, productParam.getSubjectProductRelationList(), productId);
+        //关联优选
+        relateAndInsertList(prefrenceAreaProductRelationDao, productParam.getPrefrenceAreaProductRelationList(), productId);
+        count = 1;
+        return count;
+    }
 
     @Override
     public List<PmsProduct> list(PmsProductQueryParam productQueryParam, Integer pageSize, Integer pageNum) {
@@ -48,5 +119,44 @@ public class PmsProductServiceImpl implements PmsProductService {
         }
 
         return productMapper.selectByExample(productExample);
+    }
+
+
+    /**
+     * 建立和插入关系表操作
+     */
+    private void relateAndInsertList(Object dao, List dataList, Long productId) {
+        try {
+            if (CollectionUtils.isEmpty(dataList)) return;
+            for (Object item : dataList) {
+                Method setId = item.getClass().getMethod("setId", Long.class);
+                setId.invoke(item, (Long) null);
+                Method setProductId = item.getClass().getMethod("setProductId", Long.class);
+                setProductId.invoke(item, productId);
+            }
+            Method insertList = dao.getClass().getMethod("insertList", List.class);
+            insertList.invoke(dao, dataList);
+        } catch (Exception e) {
+            LOGGER.warn("创建产品出错:{}", e.getMessage());
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private void handleSkuStockCode(List<PmsSkuStock> skuStockList, Long productId) {
+        if(CollectionUtils.isEmpty(skuStockList))return;
+        for (int i=0; i<skuStockList.size(); i++){
+            PmsSkuStock skuStock = skuStockList.get(i);
+            if (StrUtil.isEmpty(skuStock.getSkuCode())) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                StringBuilder sb = new StringBuilder();
+                //日期
+                sb.append(sdf.format(new Date()));
+                //四位商品id
+                sb.append(String.format("%04d", productId));
+                //三位索引id
+                sb.append(String.format("%03d", i+1));
+                skuStock.setSkuCode(sb.toString());
+            }
+        }
     }
 }

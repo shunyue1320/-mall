@@ -4,7 +4,7 @@ package com.shunyue.mall.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONUtil;
 import com.shunyue.mall.common.api.CommonResult;
-import com.shunyue.mall.dto.BucketPolicyConfigDto;
+import com.shunyue.mall.dao.PmsProductFullReductionDao;
 import com.shunyue.mall.dto.MinioUploadDto;
 import io.minio.*;
 import io.swagger.annotations.Api;
@@ -57,7 +57,7 @@ public class MinioController {
             } else {
                 //创建存储桶并设置只读权限
                 minioClient.makeBucket(MakeBucketArgs.builder().bucket(BUCKET_NAME).build());
-                BucketPolicyConfigDto bucketPolicyConfigDto = createBucketPolicyConfigDto(BUCKET_NAME);
+                PmsProductFullReductionDao.BucketPolicyConfigDto bucketPolicyConfigDto = createBucketPolicyConfigDto(BUCKET_NAME);
                 SetBucketPolicyArgs setBucketPolicyArgs = SetBucketPolicyArgs.builder()
                         .bucket(BUCKET_NAME)
                         .config(JSONUtil.toJsonStr(bucketPolicyConfigDto))
@@ -92,13 +92,13 @@ public class MinioController {
     /**
      * 创建存储桶的访问策略，设置为只读权限
      */
-    private BucketPolicyConfigDto createBucketPolicyConfigDto(String bucketName) {
-        BucketPolicyConfigDto.Statement statement = BucketPolicyConfigDto.Statement.builder()
+    private PmsProductFullReductionDao.BucketPolicyConfigDto createBucketPolicyConfigDto(String bucketName) {
+        PmsProductFullReductionDao.BucketPolicyConfigDto.Statement statement = PmsProductFullReductionDao.BucketPolicyConfigDto.Statement.builder()
                 .Effect("Allow")
                 .Principal("*")
                 .Action("s3:GetObject")
                 .Resource("arn:aws:s3:::"+bucketName+"/*.**").build();
-        return BucketPolicyConfigDto.builder()
+        return PmsProductFullReductionDao.BucketPolicyConfigDto.builder()
                 .Version("2012-10-17")
                 .Statement(CollUtil.toList(statement))
                 .build();
