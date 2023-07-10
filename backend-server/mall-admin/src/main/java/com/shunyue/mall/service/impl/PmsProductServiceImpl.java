@@ -32,35 +32,21 @@ public class PmsProductServiceImpl implements PmsProductService {
     protected PmsMemberPriceDao memberPriceDao;
 
     @Autowired
-    private PmsMemberPriceMapper memberPriceMapper;
-    @Autowired
-    private PmsMemberPriceDao.PmsProductLadderDao productLadderDao;
-    @Autowired
-    private PmsProductLadderMapper productLadderMapper;
+    private PmsProductLadderDao productLadderDao;
     @Autowired
     private PmsProductFullReductionDao productFullReductionDao;
-    @Autowired
-    private PmsProductFullReductionMapper productFullReductionMapper;
+
     @Autowired
     private PmsSkuStockDao skuStockDao;
-    @Autowired
-    private PmsSkuStockMapper skuStockMapper;
+
     @Autowired
     private PmsProductAttributeValueDao productAttributeValueDao;
-    @Autowired
-    private PmsProductAttributeValueMapper productAttributeValueMapper;
+
     @Autowired
     private CmsSubjectProductRelationDao subjectProductRelationDao;
-    @Autowired
-    private CmsSubjectProductRelationMapper subjectProductRelationMapper;
+
     @Autowired
     private CmsPrefrenceAreaProductRelationDao prefrenceAreaProductRelationDao;
-    @Autowired
-    private CmsPrefrenceAreaProductRelationMapper prefrenceAreaProductRelationMapper;
-    @Autowired
-    private PmsProductDao productDao;
-    @Autowired
-    private PmsProductVertifyRecordDao productVertifyRecordDao;
 
     @Override
     public int create(PmsProductParam productParam) {

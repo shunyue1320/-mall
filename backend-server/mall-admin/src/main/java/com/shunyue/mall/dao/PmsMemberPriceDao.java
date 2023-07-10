@@ -15,14 +15,4 @@ public interface PmsMemberPriceDao {
      */
     int insertList(@Param("list") List<PmsMemberPrice> memberPriceList);
 
-    /**
-     * 会员阶梯价格自定义Dao
-     * Created by macro on 2018/4/26.
-     */
-    interface PmsProductLadderDao {
-        /**
-         * 批量创建
-         */
-        int insertList(@Param("list") List<PmsProductLadder> productLadderList);
-    }
 }
