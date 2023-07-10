@@ -13,10 +13,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,8 +38,8 @@ public class PmsProductController {
         }
     }
 
-    @ApiOperation("创建商品")
-    @PostMapping("/list")
+    @ApiOperation("商品列表")
+    @GetMapping("/list")
     @ResponseBody
     public CommonResult<CommonPage<PmsProduct>> list(
             PmsProductQueryParam productQueryParam,
