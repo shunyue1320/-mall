@@ -47,6 +47,9 @@ public class PmsProductServiceImpl implements PmsProductService {
     private CmsSubjectProductRelationMapper subjectProductRelationMapper;
 
     @Autowired
+    private CmsPrefrenceAreaProductRelationMapper prefrenceAreaProductRelationMapper;
+
+    @Autowired
     private PmsSkuStockDao skuStockDao;
 
     @Autowired
