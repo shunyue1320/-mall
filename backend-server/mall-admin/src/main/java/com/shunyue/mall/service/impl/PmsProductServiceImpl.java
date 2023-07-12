@@ -6,11 +6,9 @@ import com.shunyue.mall.dao.*;
 import com.shunyue.mall.dto.PmsProductParam;
 import com.shunyue.mall.dto.PmsProductQueryParam;
 import com.shunyue.mall.mapper.PmsMemberPriceMapper;
+import com.shunyue.mall.mapper.PmsProductLadderMapper;
 import com.shunyue.mall.mapper.PmsProductMapper;
-import com.shunyue.mall.model.PmsMemberPriceExample;
-import com.shunyue.mall.model.PmsProduct;
-import com.shunyue.mall.model.PmsProductExample;
-import com.shunyue.mall.model.PmsSkuStock;
+import com.shunyue.mall.model.*;
 import com.shunyue.mall.service.PmsProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +36,9 @@ public class PmsProductServiceImpl implements PmsProductService {
 
     @Autowired
     private PmsProductLadderDao productLadderDao;
+
+    @Autowired
+    PmsProductLadderMapper productLadderMapper;
     @Autowired
     private PmsProductFullReductionDao productFullReductionDao;
 
@@ -124,6 +125,12 @@ public class PmsProductServiceImpl implements PmsProductService {
         pmsMemberPriceExample.createCriteria().andProductIdEqualTo(id);
         memberPriceMapper.deleteByExample(pmsMemberPriceExample); // 先删除这条记录
         relateAndInsertList(memberPriceDao, productParam.getMemberPriceList(), id); // 再添加这条记录
+
+        //阶梯价格
+        PmsProductLadderExample ladderExample = new PmsProductLadderExample();
+        ladderExample.createCriteria().andProductIdEqualTo(id);
+        productLadderMapper.deleteByExample(ladderExample);
+        relateAndInsertList(productLadderDao, productParam.getProductLadderList(), id);
         return 1;
     }
 
