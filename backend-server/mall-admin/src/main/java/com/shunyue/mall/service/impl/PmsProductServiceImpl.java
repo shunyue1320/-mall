@@ -6,6 +6,7 @@ import com.shunyue.mall.dao.*;
 import com.shunyue.mall.dto.PmsProductParam;
 import com.shunyue.mall.dto.PmsProductQueryParam;
 import com.shunyue.mall.mapper.PmsMemberPriceMapper;
+import com.shunyue.mall.mapper.PmsProductFullReductionMapper;
 import com.shunyue.mall.mapper.PmsProductLadderMapper;
 import com.shunyue.mall.mapper.PmsProductMapper;
 import com.shunyue.mall.model.*;
@@ -41,6 +42,9 @@ public class PmsProductServiceImpl implements PmsProductService {
     PmsProductLadderMapper productLadderMapper;
     @Autowired
     private PmsProductFullReductionDao productFullReductionDao;
+
+    @Autowired
+    private PmsProductFullReductionMapper productFullReductionMapper;
 
     @Autowired
     private PmsSkuStockDao skuStockDao;
@@ -120,17 +124,25 @@ public class PmsProductServiceImpl implements PmsProductService {
         product.setId(id);
         productMapper.updateByPrimaryKeySelective(product);
 
-        //会员价格
+        // 会员价格
         PmsMemberPriceExample pmsMemberPriceExample = new PmsMemberPriceExample();
         pmsMemberPriceExample.createCriteria().andProductIdEqualTo(id);
         memberPriceMapper.deleteByExample(pmsMemberPriceExample); // 先删除这条记录
         relateAndInsertList(memberPriceDao, productParam.getMemberPriceList(), id); // 再添加这条记录
 
-        //阶梯价格
+        // 阶梯价格
         PmsProductLadderExample ladderExample = new PmsProductLadderExample();
         ladderExample.createCriteria().andProductIdEqualTo(id);
         productLadderMapper.deleteByExample(ladderExample);
         relateAndInsertList(productLadderDao, productParam.getProductLadderList(), id);
+
+        // 满减价格
+        PmsProductFullReductionExample fullReductionExample = new PmsProductFullReductionExample();
+        fullReductionExample.createCriteria().andProductIdEqualTo(id);
+        productFullReductionMapper.deleteByExample(fullReductionExample);
+        relateAndInsertList(productFullReductionDao, productParam.getProductFullReductionList(), id);
+
+
         return 1;
     }
 
