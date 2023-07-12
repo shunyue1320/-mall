@@ -44,6 +44,9 @@ public class PmsProductServiceImpl implements PmsProductService {
     private PmsProductFullReductionMapper productFullReductionMapper;
 
     @Autowired
+    private CmsSubjectProductRelationMapper subjectProductRelationMapper;
+
+    @Autowired
     private PmsSkuStockDao skuStockDao;
 
     @Autowired
@@ -148,6 +151,18 @@ public class PmsProductServiceImpl implements PmsProductService {
         productAttributeValueExample.createCriteria().andProductIdEqualTo(id);
         productAttributeValueMapper.deleteByExample(productAttributeValueExample);
         relateAndInsertList(productAttributeValueDao, productParam.getProductAttributeValueList(), id);
+
+        // 关联专题
+        CmsSubjectProductRelationExample subjectProductRelationExample = new CmsSubjectProductRelationExample();
+        subjectProductRelationExample.createCriteria().andProductIdEqualTo(id);
+        subjectProductRelationMapper.deleteByExample(subjectProductRelationExample);
+        relateAndInsertList(subjectProductRelationDao, productParam.getSubjectProductRelationList(), id);
+
+        // 关联优选
+        CmsPrefrenceAreaProductRelationExample prefrenceAreaExample = new CmsPrefrenceAreaProductRelationExample();
+        prefrenceAreaExample.createCriteria().andProductIdEqualTo(id);
+        prefrenceAreaProductRelationMapper.deleteByExample(prefrenceAreaExample);
+        relateAndInsertList(prefrenceAreaProductRelationDao, productParam.getPrefrenceAreaProductRelationList(), id);
 
         return 1;
     }
