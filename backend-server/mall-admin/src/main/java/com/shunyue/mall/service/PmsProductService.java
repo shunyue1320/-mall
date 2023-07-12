@@ -21,4 +21,10 @@ public interface PmsProductService {
      * 查询商品列表
      */
     List<PmsProduct> list(PmsProductQueryParam productQueryParam, Integer pageSize,Integer pageNum);
+
+    /**
+     * 更新商品
+     */
+    @Transactional
+    int update(Long id, PmsProductParam productParam);
 }

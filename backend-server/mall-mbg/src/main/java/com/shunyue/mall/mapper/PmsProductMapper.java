@@ -10,4 +10,9 @@ public interface PmsProductMapper {
     int insertSelective(PmsProduct record);
     List<PmsProduct> selectByExample(PmsProductExample example);
 
+
+    /**
+     *  更新商品信息
+     */
+    int updateByPrimaryKeySelective(PmsProduct record);
 }

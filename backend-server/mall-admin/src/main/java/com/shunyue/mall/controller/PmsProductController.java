@@ -49,4 +49,16 @@ public class PmsProductController {
          List<PmsProduct> productList = productService.list(productQueryParam, pageSize, pageNum);
         return CommonResult.success(CommonPage.restPage(productList));
     }
+
+    @ApiOperation("更新商品")
+    @PostMapping("/update/{id}")
+    @ResponseBody
+    public CommonResult update(@PathVariable Long id, @RequestBody PmsProductParam productParam) {
+        int count = productService.update(id, productParam);
+        if (count > 0) {
+            return CommonResult.success(count);
+        } else {
+            return CommonResult.failed();
+        }
+    }
 }

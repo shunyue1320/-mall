@@ -5,7 +5,9 @@ import com.github.pagehelper.PageHelper;
 import com.shunyue.mall.dao.*;
 import com.shunyue.mall.dto.PmsProductParam;
 import com.shunyue.mall.dto.PmsProductQueryParam;
+import com.shunyue.mall.mapper.PmsMemberPriceMapper;
 import com.shunyue.mall.mapper.PmsProductMapper;
+import com.shunyue.mall.model.PmsMemberPriceExample;
 import com.shunyue.mall.model.PmsProduct;
 import com.shunyue.mall.model.PmsProductExample;
 import com.shunyue.mall.model.PmsSkuStock;
@@ -30,6 +32,9 @@ public class PmsProductServiceImpl implements PmsProductService {
 
     @Autowired
     protected PmsMemberPriceDao memberPriceDao;
+
+    @Autowired
+    private PmsMemberPriceMapper memberPriceMapper;
 
     @Autowired
     private PmsProductLadderDao productLadderDao;
@@ -105,6 +110,21 @@ public class PmsProductServiceImpl implements PmsProductService {
         }
 
         return productMapper.selectByExample(productExample);
+    }
+
+    @Override
+    public int update(Long id, PmsProductParam productParam) {
+        //更新商品信息
+        PmsProduct product = productParam;
+        product.setId(id);
+        productMapper.updateByPrimaryKeySelective(product);
+
+        //会员价格
+        PmsMemberPriceExample pmsMemberPriceExample = new PmsMemberPriceExample();
+        pmsMemberPriceExample.createCriteria().andProductIdEqualTo(id);
+        memberPriceMapper.deleteByExample(pmsMemberPriceExample); // 先删除这条记录
+        relateAndInsertList(memberPriceDao, productParam.getMemberPriceList(), id); // 再添加这条记录
+        return 1;
     }
 
 
