@@ -5,10 +5,7 @@ import com.github.pagehelper.PageHelper;
 import com.shunyue.mall.dao.*;
 import com.shunyue.mall.dto.PmsProductParam;
 import com.shunyue.mall.dto.PmsProductQueryParam;
-import com.shunyue.mall.mapper.PmsMemberPriceMapper;
-import com.shunyue.mall.mapper.PmsProductFullReductionMapper;
-import com.shunyue.mall.mapper.PmsProductLadderMapper;
-import com.shunyue.mall.mapper.PmsProductMapper;
+import com.shunyue.mall.mapper.*;
 import com.shunyue.mall.model.*;
 import com.shunyue.mall.service.PmsProductService;
 import org.slf4j.Logger;
@@ -51,6 +48,9 @@ public class PmsProductServiceImpl implements PmsProductService {
 
     @Autowired
     private PmsProductAttributeValueDao productAttributeValueDao;
+
+    @Autowired
+    private PmsProductAttributeValueMapper productAttributeValueMapper;
 
     @Autowired
     private CmsSubjectProductRelationDao subjectProductRelationDao;
@@ -142,6 +142,12 @@ public class PmsProductServiceImpl implements PmsProductService {
         productFullReductionMapper.deleteByExample(fullReductionExample);
         relateAndInsertList(productFullReductionDao, productParam.getProductFullReductionList(), id);
 
+
+        // 修改商品参数,添加自定义商品规格
+        PmsProductAttributeValueExample productAttributeValueExample = new PmsProductAttributeValueExample();
+        productAttributeValueExample.createCriteria().andProductIdEqualTo(id);
+        productAttributeValueMapper.deleteByExample(productAttributeValueExample);
+        relateAndInsertList(productAttributeValueDao, productParam.getProductAttributeValueList(), id);
 
         return 1;
     }
