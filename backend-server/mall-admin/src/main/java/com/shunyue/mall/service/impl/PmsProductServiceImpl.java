@@ -1,5 +1,6 @@
 package com.shunyue.mall.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageHelper;
 import com.shunyue.mall.dao.*;
@@ -18,6 +19,7 @@ import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PmsProductServiceImpl implements PmsProductService {
@@ -51,6 +53,9 @@ public class PmsProductServiceImpl implements PmsProductService {
 
     @Autowired
     private PmsSkuStockDao skuStockDao;
+
+    @Autowired
+    private PmsSkuStockMapper skuStockMapper;
 
     @Autowired
     private PmsProductAttributeValueDao productAttributeValueDao;
@@ -148,6 +153,8 @@ public class PmsProductServiceImpl implements PmsProductService {
         productFullReductionMapper.deleteByExample(fullReductionExample);
         relateAndInsertList(productFullReductionDao, productParam.getProductFullReductionList(), id);
 
+        //修改sku库存信息
+        handleUpdateSkuStockList(id, productParam);
 
         // 修改商品参数,添加自定义商品规格
         PmsProductAttributeValueExample productAttributeValueExample = new PmsProductAttributeValueExample();
@@ -168,6 +175,49 @@ public class PmsProductServiceImpl implements PmsProductService {
         relateAndInsertList(prefrenceAreaProductRelationDao, productParam.getPrefrenceAreaProductRelationList(), id);
 
         return 1;
+    }
+
+    private void handleUpdateSkuStockList(Long id, PmsProductParam productParam) {
+        // 当前的sku信息
+        List<PmsSkuStock> currSkuList = productParam.getSkuStockList();
+        // 当前没有sku直接删除
+        if(CollUtil.isEmpty(currSkuList)){
+            PmsSkuStockExample skuStockExample = new PmsSkuStockExample();
+            skuStockExample.createCriteria().andProductIdEqualTo(id);
+            skuStockMapper.deleteByExample(skuStockExample);
+            return;
+        }
+
+        //获取初始sku信息
+        PmsSkuStockExample skuStockExample = new PmsSkuStockExample();
+        skuStockExample.createCriteria().andProductIdEqualTo(id);
+        List<PmsSkuStock> oriStuList = skuStockMapper.selectByExample(skuStockExample);
+        //获取新增sku信息
+        List<PmsSkuStock> insertSkuList = currSkuList.stream().filter(item->item.getId()==null).collect(Collectors.toList());
+        //获取需要更新的sku信息
+        List<PmsSkuStock> updateSkuList = currSkuList.stream().filter(item->item.getId()!=null).collect(Collectors.toList());
+        List<Long> updateSkuIds = updateSkuList.stream().map(PmsSkuStock::getId).collect(Collectors.toList());
+        //获取需要删除的sku信息
+        List<PmsSkuStock> removeSkuList = oriStuList.stream().filter(item-> !updateSkuIds.contains(item.getId())).collect(Collectors.toList());
+        handleSkuStockCode(insertSkuList,id);
+        handleSkuStockCode(updateSkuList,id);
+        //新增sku
+        if(CollUtil.isNotEmpty(insertSkuList)){
+            relateAndInsertList(skuStockDao, insertSkuList, id);
+        }
+        //删除sku
+        if(CollUtil.isNotEmpty(removeSkuList)){
+            List<Long> removeSkuIds = removeSkuList.stream().map(PmsSkuStock::getId).collect(Collectors.toList());
+            PmsSkuStockExample removeExample = new PmsSkuStockExample();
+            removeExample.createCriteria().andIdIn(removeSkuIds);
+            skuStockMapper.deleteByExample(removeExample);
+        }
+        //修改sku
+        if(CollUtil.isNotEmpty(updateSkuList)){
+            for (PmsSkuStock pmsSkuStock : updateSkuList) {
+                skuStockMapper.updateByPrimaryKeySelective(pmsSkuStock);
+            }
+        }
     }
 
 
