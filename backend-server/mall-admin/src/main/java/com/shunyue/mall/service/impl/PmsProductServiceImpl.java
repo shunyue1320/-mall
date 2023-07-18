@@ -220,6 +220,15 @@ public class PmsProductServiceImpl implements PmsProductService {
         }
     }
 
+    @Override
+    public int updatePublishStatus(List<Long> ids, Integer publishStatus) {
+        PmsProduct record = new PmsProduct();
+        record.setPublishStatus(publishStatus);
+        PmsProductExample example = new PmsProductExample();
+        example.createCriteria().andIdIn(ids);
+        return productMapper.updateByExampleSelective(record, example);
+    }
+
 
     /**
      * 建立和插入关系表操作

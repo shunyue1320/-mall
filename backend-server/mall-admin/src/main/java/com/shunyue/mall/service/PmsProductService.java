@@ -27,4 +27,9 @@ public interface PmsProductService {
      */
     @Transactional
     int update(Long id, PmsProductParam productParam);
+
+    /**
+     * 批量修改商品推荐状态
+     */
+    int updatePublishStatus(List<Long> ids, Integer publishStatus);
 }

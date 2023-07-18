@@ -61,4 +61,19 @@ public class PmsProductController {
             return CommonResult.failed();
         }
     }
+
+    @ApiOperation("批量上下架商品")
+    @PostMapping("/update/publishStatus")
+    @ResponseBody
+    public CommonResult updatePublishStatus(
+            @RequestParam("ids") List<Long> ids,
+            @RequestParam("publishStatus") Integer publishStatus
+    ) {
+        int count = productService.updatePublishStatus(ids, publishStatus);
+        if (count > 0) {
+            return CommonResult.success(count);
+        } else {
+            return CommonResult.failed();
+        }
+    }
 }
